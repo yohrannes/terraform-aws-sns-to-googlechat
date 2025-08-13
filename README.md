@@ -1,1 +1,0 @@
-# terraform-aws-vpn-down-alarm-gchat
