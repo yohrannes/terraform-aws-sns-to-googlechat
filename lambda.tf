@@ -42,7 +42,7 @@ resource "aws_lambda_function" "alert_function" {
 
   environment {
     variables = {
-      GOOGLE_CHAT_WEBHOOK_URL = var.gchat_webhook
+      GOOGLE_CHAT_WEBHOOK_URL = var.gchat_webhook_url
     }
   }
 
