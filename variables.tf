@@ -1,4 +1,4 @@
-variable "gchat_webhook" {
+variable "gchat_webhook_url" {
     description = "Google Chat webhook URL for sending alerts"
     type        = string
 }
