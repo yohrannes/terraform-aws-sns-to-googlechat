@@ -35,3 +35,12 @@ override.tf.json
 # Ignore CLI configuration files
 .terraformrc
 terraform.rc
+
+# terraform plan
+plan
+
+#ENV python
+venv
+
+# lambda
+vpn_alert.zip
