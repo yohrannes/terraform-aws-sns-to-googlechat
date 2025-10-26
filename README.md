@@ -1,95 +1,95 @@
 # Terraform AWS SNS to Google Chat
 
-Este projeto Terraform implanta uma infraestrutura na AWS que encaminha mensagens de um tópico SNS (Simple Notification Service) para um espaço do Google Chat usando uma função Lambda. É uma solução "serverless" e econômica para receber notificações e alertas da AWS diretamente no seu ambiente de colaboração.
+This Terraform project deploys an infrastructure on AWS that forwards messages from an SNS (Simple Notification Service) topic to a Google Chat space using a Lambda function. It is a "serverless" and cost-effective solution for receiving notifications and alerts from AWS directly in your collaboration environment.
 
 ## Features
 
-- **Infraestrutura como Código (IaC):** Toda a infraestrutura é definida e gerenciada usando Terraform, permitindo implantação e replicação consistentes.
-- **Serverless:** Utiliza AWS Lambda, eliminando a necessidade de gerenciar servidores.
-- **Integração com Google Chat:** Receba notificações da AWS em tempo real no seu espaço do Google Chat.
-- **Altamente Configurável:** Use variáveis do Terraform para personalizar o nome do alerta e a URL do webhook do Google Chat.
-- **Formatação de Mensagens:** A função Lambda formata as mensagens do SNS de forma clara e legível para o Google Chat, incluindo informações como assunto, mensagem e timestamp.
+- **Infrastructure as Code (IaC):** The entire infrastructure is defined and managed using Terraform, allowing for consistent deployment and replication.
+- **Serverless:** Uses AWS Lambda, eliminating the need to manage servers.
+- **Google Chat Integration:** Receive AWS notifications in real-time in your Google Chat space.
+- **Highly Configurable:** Use Terraform variables to customize the alert name and Google Chat webhook URL.
+- **Message Formatting:** The Lambda function formats SNS messages clearly and legibly for Google Chat, including information such as subject, message, and timestamp.
 
-## Como Funciona
+## How It Works
 
-O fluxo de trabalho é o seguinte:
+The workflow is as follows:
 
-1.  Uma mensagem é publicada em um tópico SNS da AWS.
-2.  O tópico SNS aciona uma função Lambda.
-3.  A função Lambda processa a mensagem do SNS.
-4.  A função Lambda formata a mensagem e a envia para a URL do webhook do Google Chat configurada.
-5.  A mensagem aparece no espaço do Google Chat.
+1.  A message is published to an AWS SNS topic.
+2.  The SNS topic triggers a Lambda function.
+3.  The Lambda function processes the SNS message.
+4.  The Lambda function formats the message and sends it to the configured Google Chat webhook URL.
+5.  The message appears in the Google Chat space.
 
 ```mermaid
 graph TD;
-    A[Mensagem] --> B(Tópico SNS);
-    B --> C{Função Lambda};
+    A[Message] --> B(SNS Topic);
+    B --> C{Lambda Function};
     C --> D(Google Chat);
 ```
 
-## Pré-requisitos
+## Prerequisites
 
-Antes de começar, você precisará ter o seguinte:
+Before you begin, you will need to have the following:
 
--   [Terraform](https://learn.hashicorp.com/tutorials/terraform/install-cli) instalado.
--   [Credenciais da AWS](https://docs.aws.amazon.com/keyspaces/latest/devguide/setting-up-aws-credentials.html) configuradas em seu ambiente.
--   Uma [URL de webhook do Google Chat](https://developers.google.com/chat/how-tos/webhooks).
+-   [Terraform](https://learn.hashicorp.com/tutorials/terraform/install-cli) installed.
+-   [AWS Credentials](https://docs.aws.amazon.com/keyspaces/latest/devguide/setting-up-aws-credentials.html) configured in your environment.
+-   A [Google Chat webhook URL](https://developers.google.com/chat/how-tos/webhooks).
 
-## Como Usar
+## How to Use
 
-1.  **Clone o repositório:**
+1.  **Clone the repository:**
 
     ```bash
-    git clone https://github.com/seu-usuario/terraform-aws-sns-to-googlechat.git
+    git clone https://github.com/your-user/terraform-aws-sns-to-googlechat.git
     cd terraform-aws-sns-to-googlechat
     ```
 
-2.  **Crie um arquivo `terraform.tfvars`:**
+2.  **Create a `terraform.tfvars` file:**
 
-    Crie um arquivo chamado `terraform.tfvars` e adicione as seguintes variáveis:
+    Create a file named `terraform.tfvars` and add the following variables:
 
     ```hcl
-    gchat_webhook_url = "URL_DO_SEU_WEBHOOK_DO_GOOGLE_CHAT"
-    alert_name        = "meu-alerta-personalizado"
+    gchat_webhook_url = "YOUR_GOOGLE_CHAT_WEBHOOK_URL"
+    alert_name        = "my-custom-alert"
     ```
 
-3.  **Inicialize o Terraform:**
+3.  **Initialize Terraform:**
 
     ```bash
     terraform init
     ```
 
-4.  **Aplique o plano do Terraform:**
+4.  **Apply the Terraform plan:**
 
     ```bash
     terraform apply
     ```
 
-    O Terraform provisionará os recursos necessários na sua conta da AWS.
+    Terraform will provision the necessary resources in your AWS account.
 
-5.  **Teste a integração:**
+5.  **Test the integration:**
 
-    Você pode testar a integração publicando uma mensagem no tópico SNS criado. Você pode fazer isso através do Console da AWS ou usando a AWS CLI:
+    You can test the integration by publishing a message to the created SNS topic. You can do this through the AWS Console or by using the AWS CLI:
 
     ```bash
-    aws sns publish --topic-arn "ARN_DO_SEU_TOPICO_SNS" --message "Olá, mundo!"
+    aws sns publish --topic-arn "YOUR_SNS_TOPIC_ARN" --message "Hello, world!"
     ```
 
-    Você deverá receber uma notificação no seu espaço do Google Chat.
+    You should receive a notification in your Google Chat space.
 
-## Variáveis do Terraform
+## Terraform Variables
 
-| Nome                | Descrição                                    | Tipo   | Padrão              | Obrigatório |
-| ------------------- | ---------------------------------------------- | ------ | ------------------- | ----------- |
-| `gchat_webhook_url` | URL do webhook do Google Chat para enviar alertas. | `string` | `""`                | Sim         |
-| `alert_name`        | Nome do alerta, usado para nomear os recursos.   | `string` | `"purpose-X-alert"` | Não         |
+| Name                | Description                                    | Type   | Default             | Required |
+| ------------------- | ---------------------------------------------- | ------ | ------------------- | -------- |
+| `gchat_webhook_url` | Google Chat webhook URL to send alerts to.       | `string` | `""`                | Yes      |
+| `alert_name`        | Name of the alert, used to name the resources.   | `string` | `"purpose-X-alert"` | No       |
 
-## Função Lambda
+## Lambda Function
 
-A função Lambda é escrita em Python 3.9 e usa a biblioteca `requests` para enviar mensagens para o Google Chat. O código da função está embutido no arquivo `lambda.tf` e é empacotado em um arquivo `.zip` durante a implantação.
+The Lambda function is written in Python 3.9 and uses the `requests` library to send messages to Google Chat. The function's code is embedded in the `lambda.tf` file and is packaged into a `.zip` file during deployment.
 
-A função é projetada para processar eventos do SNS e formatar a mensagem de uma maneira amigável para o Google Chat. Ela também inclui tratamento de erros e notifica o Google Chat em caso de falha no processamento.
+The function is designed to process SNS events and format the message in a user-friendly way for Google Chat. It also includes error handling and notifies Google Chat in case of processing failure.
 
-## Licença
+## License
 
-Este projeto está licenciado sob a Licença MIT. Veja o arquivo [LICENSE](LICENSE) para mais detalhes.
+This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for more details.
